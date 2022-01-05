@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
+from collections import Counter
 
 
 def load_line(filename):
@@ -9,27 +10,34 @@ def load_line(filename):
 
 
 def update_line(ligne):
-    num_8 = sum(ligne == 0)
-    #  print(num_8)
-    array_of_8 = np.ones(num_8) * 8
-    new_line = ligne - 1
-    new_line[new_line == -1] = 6
-    return np.r_[new_line, array_of_8]
+    print(f"\n--entering update_line")
+    print(ligne)
+    num_8 = ligne[0]
+    del ligne[0]
+    for entry in ligne:
+        ligne[entry - 1] = ligne[entry]
+    if num_8:
+        ligne[6] += num_8
+        ligne[8] += num_8
+    print(ligne)
+    print(f"\n--exiting update_line")
+    return None
 
 
 def main(f, l):
     line = load_line(f)
-    #  print(line)
+    peces_con_coef = Counter(line)
+    print(peces_con_coef)
+
     for i, day in enumerate(range(l)):
-        line = update_line(line)
+        update_line(peces_con_coef)
         if i % 10 == 0:
             print(day)
-        #  print(line)
-    print(len(line))
-    return len(line)
+
+    return peces_con_coef.total()
 
 
 if __name__ == "__main__":
     import sys
     fichier = sys.argv[1]
-    main(fichier, 180)
+    print(main(fichier, 18))

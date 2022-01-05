@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from script2 import algo as algoritmo
+from script3 import optimal as algoritmo
 from time import perf_counter
 
 
