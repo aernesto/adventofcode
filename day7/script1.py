@@ -13,7 +13,9 @@ def energia(x, freq):
     terms = 0
     for p in freq:
         n = freq[p]
-        terms += n * abs(p - x)
+        nn = abs(p - x)
+
+        terms += n * nn * (nn + 1) / 2
     return terms
 
 
@@ -21,7 +23,7 @@ def main_function(fichier):
     numeros = load_line(fichier)
     frecuencias = Counter(numeros)
     e_min = 9999999999999999
-    for xx in set(numeros):
+    for xx in range(max(numeros) + 1):
         e = energia(xx, frecuencias)
         if e < e_min:
             e_min = e
