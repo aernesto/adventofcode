@@ -6,6 +6,11 @@ from typing import Sequence
 
 def learn_mapping(ten_strings: Sequence[str]):
     """returns a dict mapping frozenset of strings to int"""
+    def verb(sss='   --'):
+        print(sss)
+        pprint(map_)
+        pprint(inv_map_)
+        pprint(seg2letter)
 
     # the mapping for digits 1, 4, 7, 8 is easy to learn
     _easy = {7: 3, 4: 4, 1: 2, 8: 7}  # maps digit to str len
@@ -31,7 +36,7 @@ def learn_mapping(ten_strings: Sequence[str]):
 
     inv_map_ = {v: k for k, v in map_.items()}
     four_vertical = inv_map_[8] - three_horizontal
-
+    verb('---- four_vertical')
     # also, intersection, 3, 5, 2, 4, we get the middle segment
     intersection = three_horizontal.intersection(inv_map_[4])
     seg2letter['M'] = extract(intersection)
@@ -65,14 +70,27 @@ def learn_mapping(ten_strings: Sequence[str]):
     inv_map_[2] = two
 
     # to distinguish between 3 and 5, we intersect with 6.
+    print('\n\n diag-----------')
+    print('five_segments=')
+    pprint(five_segments)
+    print('six=')
+    pprint(six)
     with_six = [s.intersection(six) for s in five_segments if s != two]
-    three = extract(s for s in with_six if len(s) == 4)
+    print('with_six=')
+    pprint(with_six)
     five = extract(s for s in with_six if len(s) == 5)
+    three = extract(s for s in five_segments if s not in {five, two})
     map_[three] = 3
     inv_map_[3] = three
     map_[five] = 5
     inv_map_[5] = five
+    print('\n\n diag-----------')
     return map_
+
+
+def form_int(int_seq):
+    ix = [3, 2, 1, 0]
+    return sum(10**i * item for i, item in zip(ix, int_seq))
 
 
 def main_f(fname):
@@ -84,7 +102,7 @@ def main_f(fname):
             four_digits = last_part.split()[:4]
             mapping = learn_mapping(ten_digits)
             pprint(mapping)
-            summ += sum(mapping[frozenset(fd)] for fd in four_digits)
+            summ += form_int(mapping[frozenset(fd)] for fd in four_digits)
     return summ
 
 
