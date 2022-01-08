@@ -36,7 +36,7 @@ def learn_mapping(ten_strings: Sequence[str]):
 
     inv_map_ = {v: k for k, v in map_.items()}
     four_vertical = inv_map_[8] - three_horizontal
-    verb('---- four_vertical')
+    #  verb('---- four_vertical')
     # also, intersection, 3, 5, 2, 4, we get the middle segment
     intersection = three_horizontal.intersection(inv_map_[4])
     seg2letter['M'] = extract(intersection)
@@ -47,6 +47,8 @@ def learn_mapping(ten_strings: Sequence[str]):
 
     # at this stage we can build the 0
     ss_ = seg2letter['H'].union(seg2letter['B']).union(four_vertical)
+    #  print('YOOOOOOOOOOOOOOOOOOOOOOO')
+    #  pprint(ss_)
     map_[ss_] = 0
     inv_map_[0] = ss_
     six_segs = [frozenset(s) for s in ten_strings if len(s) == 6]
@@ -55,7 +57,7 @@ def learn_mapping(ten_strings: Sequence[str]):
     seg2letter['BL'] = inv_map_[0] - three_horizontal - inv_map_[4]
 
     # the 9 is the set which doesn't contain BL segment
-    nine = extract([s for s in six_segs if seg2letter['BL'] not in s])
+    nine = extract(s for s in six_segs if extract(seg2letter['BL']) not in s)
     map_[nine] = 9
     inv_map_[9] = nine
 
@@ -70,21 +72,22 @@ def learn_mapping(ten_strings: Sequence[str]):
     inv_map_[2] = two
 
     # to distinguish between 3 and 5, we intersect with 6.
-    print('\n\n diag-----------')
-    print('five_segments=')
-    pprint(five_segments)
-    print('six=')
-    pprint(six)
+    #  print('\n\n diag-----------')
+    #  print('five_segments=')
+    #  pprint(five_segments)
+    #  print('six=')
+    #  pprint(six)
     with_six = [s.intersection(six) for s in five_segments if s != two]
-    print('with_six=')
-    pprint(with_six)
+    #  print('with_six=')
+    #  pprint(with_six)
     five = extract(s for s in with_six if len(s) == 5)
     three = extract(s for s in five_segments if s not in {five, two})
     map_[three] = 3
     inv_map_[3] = three
     map_[five] = 5
     inv_map_[5] = five
-    print('\n\n diag-----------')
+    #  print('\n\n diag-----------')
+    assert set(map_.keys()) == set(map(frozenset, ten_strings)), f"{map_}"
     return map_
 
 
@@ -101,7 +104,7 @@ def main_f(fname):
             ten_digits = first_part.split()
             four_digits = last_part.split()[:4]
             mapping = learn_mapping(ten_digits)
-            pprint(mapping)
+            #  pprint(mapping)
             summ += form_int(mapping[frozenset(fd)] for fd in four_digits)
     return summ
 
